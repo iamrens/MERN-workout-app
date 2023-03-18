@@ -13,7 +13,8 @@ import CancelIcon from '@mui/icons-material/Cancel';
 const WorkoutDetails = ({ workout }) => {
     const [isEditing, setIsEditing] = useState(false);
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
-    const [ alertSuccess, setAlertSuccess ] = useState(false);
+    const [ alertEdit, setAlertEdit ] = useState(false);
+    const [ alertDelete, setAlertDelete ] = useState(false);
     const [ error, setError ] = useState(null);
     const { user } = useAuthContext();
 
@@ -27,9 +28,9 @@ const WorkoutDetails = ({ workout }) => {
             headers: { "Authorization": `Bearer ${user.token}` }
           });
           console.log(response.data);
-          setAlertSuccess(true);
+          setAlertDelete(true);
           setTimeout(() => {
-            setAlertSuccess(false);
+            setAlertDelete(false);
           }, 3000);
         } catch (error) {
           console.error(error);
@@ -51,9 +52,9 @@ const WorkoutDetails = ({ workout }) => {
             });
             console.log(response.data);
             setIsEditing(false);
-            setAlertSuccess(true);
+            setAlertEdit(true);
             setTimeout(() => {
-                setAlertSuccess(false);
+                setAlertEdit(false);
             }, 3000);
         } catch (error) {
             console.error(error);
@@ -165,9 +166,14 @@ const WorkoutDetails = ({ workout }) => {
                     </Box>
                 </Box>
             )}
-            {alertSuccess && 
-                <Alert variant="filled" severity="success" sx={{ position: 'fixed', top: 0, right: 0, m: '16px', opacity: 0.8}} onClose={() => setAlertSuccess(false)} open={alertSuccess}>
-                    {alertSuccess}
+            {alertEdit && 
+                <Alert variant="filled" severity="success" sx={{ position: 'fixed', top: 0, right: 0, m: '16px', opacity: 0.8}} onClose={() => setAlertEdit(false)} open={alertEdit}>
+                    Edited successfully.
+                </Alert>
+            }
+            {alertDelete && 
+                <Alert variant="filled" severity="success" sx={{ position: 'fixed', top: 0, right: 0, m: '16px', opacity: 0.8}} onClose={() => setAlertDelete(false)} open={alertDelete}>
+                    Deleted successfully.
                 </Alert>
             }
             {error && 

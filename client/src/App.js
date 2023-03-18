@@ -6,7 +6,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import { useAuthContext } from './hooks/useAuthContext';
-
+import NotFound from './pages/NotFound';
 
 const theme = createTheme({
   palette: {
@@ -42,7 +42,7 @@ function App() {
         <Route index element={user ? <Home /> : <Navigate to="/login" />} />
         <Route path="login" element={!user ? <Login /> : <Navigate to="/" /> } />
         <Route path="signup" element={!user ? <Signup /> : <Navigate to="/" /> } />
-        {/* <Route path="*" element={} /> */}
+        <Route path="*" element={<NotFound />} />
       </Route>
     )
   )

@@ -31,7 +31,7 @@ const RootLayout = () => {
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
-            minHeight: '700px'
+            height: '100vh'
             }}>
 
                 <AppBar  
@@ -95,12 +95,12 @@ const RootLayout = () => {
                                             onClose={handleClose}
                                             >
                                             <MenuItem onClick={handleClose}>
-                                                <Typography variant="h6" sx={{fontSize: '18px'}}>
+                                                <Typography variant="body1" sx={{fontSize: '16px', fontWeight: 600}}>
                                                     <NavLink to="login" style={{color: '#212121'}}>Login</NavLink>
                                                 </Typography>
                                             </MenuItem>
                                             <MenuItem onClick={handleClose}>
-                                                <Typography variant="h6" sx={{fontSize: '18px'}}>
+                                                <Typography variant="body1" sx={{fontSize: '16px', fontWeight: 600}}>
                                                     <NavLink to="signup" style={{color: '#212121'}}>Signup</NavLink>
                                                 </Typography>
                                             </MenuItem>
