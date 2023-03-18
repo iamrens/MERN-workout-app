@@ -1,22 +1,36 @@
 import { useForm } from "react-hook-form";
 import Axios from "axios";
 import { useState } from "react";
+import { useAuthContext } from "../hooks/useAuthContext";
+
 import { Box, Accordion, AccordionSummary, AccordionDetails, Typography, TextField, Button, Grid, CircularProgress, Alert } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 
 const Form = () => {
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm();
   const [ error, setError ] = useState(null);
   const [ alertSuccess, setAlertSuccess ] = useState(false);
+  const { user } = useAuthContext();
 
   const onSubmit = async (data) => {
+    if (!user) {
+      setError('You must logged in.')
+      setTimeout(() => {
+        setError(false);
+      }, 3000);
+      return
+    }
+
     const workout = {
       title: data.title,
       load: data.load,
       reps: data.reps,
     };
     try {
-      const response = await Axios.post('http://localhost:4000/api/workouts', workout);
+      const response = await Axios.post('http://localhost:4000/api/workouts', workout, {
+        headers: { "Authorization": `Bearer ${user.token}` }
+      });
       console.log('new workout added:', response.data);
       reset();
       setAlertSuccess(true);
@@ -25,7 +39,7 @@ const Form = () => {
       }, 3000);
     } catch (error) {
       console.error(error);
-      setError(error);
+      setError('Error adding workout.');
       setTimeout(() => {
         setError(false);
       }, 3000);
@@ -72,7 +86,7 @@ const Form = () => {
         }
         {error && 
           <Alert variant="filled" severity="error" sx={{ position: 'fixed', top: 0, right: 0, m: '16px', opacity: 0.8}} onClose={() => setError(false)} open={error}>
-            ERROR adding workout!
+            {error}
           </Alert>
         }
 

@@ -3,9 +3,11 @@ import Workout from "../models/workout.js"
 
 // GET all workouts
 const getAllWorkout = async (req, res) => {
+    const user_id = req.user._id
+
     try {
         const workouts = await Workout
-            .find({})
+            .find({ user_id })
             .sort({createdAt: -1})
         res.status(200).json(workouts)
     } catch (error) {
@@ -13,18 +15,6 @@ const getAllWorkout = async (req, res) => {
     }
     
 };
-
-// GET a single workout
-// const getWorkout = async (req, res) => {
-//     const { id } = req.params;
-//     const workout = await Workout.findById(id)
-
-//     if (!workout) {
-//         return res.status(404).json({error: 'No such workout'})
-//     }
-
-//     res.status(200).json(workout)
-// };
 
 const getWorkout = async (req, res) => {
     const { id } = req.params;
@@ -45,13 +35,11 @@ const getWorkout = async (req, res) => {
 // CREATE a new workout
 const createWorkout = async (req, res) => {
     const { title, load, reps } = req.body
-
-    // if (!title || !load || !reps) {
-    //     return res.status(400).json({ error: 'Please provide the blanks' });
-    // }
     
     try {
-        const workout = await Workout.create({title, load, reps})
+        const user_id = req.user._id
+
+        const workout = await Workout.create({title, load, reps, user_id})
         res.status(200).json(workout)
     } catch (error) {
         res.status(400).json({error: "There is a problem adding your workout"})

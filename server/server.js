@@ -4,6 +4,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 
 import workoutRouter from './routes/workout.routes.js';
+import userRouter from './routes/user.routes.js'
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.get('/', (req, res) => {
 
 // routes
 app.use('/api/workouts', workoutRouter)
+app.use('/api/user', userRouter)
 
 // Connect to db
 mongoose.set('strictQuery', true);

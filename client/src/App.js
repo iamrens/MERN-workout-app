@@ -1,19 +1,12 @@
-import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider, Navigate } from 'react-router-dom';
 import RootLayout from './components/RootLayout';
 import Home from './pages/Home';
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import { useAuthContext } from './hooks/useAuthContext';
 
-
-
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route path="/" element={ <RootLayout /> }>
-      <Route index element={ <Home />} />
-      {/* <Route path="" element={} /> */}
-    </Route>
-  )
-)
 
 const theme = createTheme({
   palette: {
@@ -41,6 +34,18 @@ const theme = createTheme({
 });
 
 function App() {
+  const { user } = useAuthContext();
+
+  const router = createBrowserRouter( 
+    createRoutesFromElements(
+      <Route path="/" element={ <RootLayout /> }>
+        <Route index element={user ? <Home /> : <Navigate to="/login" />} />
+        <Route path="login" element={!user ? <Login /> : <Navigate to="/" /> } />
+        <Route path="signup" element={!user ? <Signup /> : <Navigate to="/" /> } />
+        {/* <Route path="*" element={} /> */}
+      </Route>
+    )
+  )
 
   return (
       <div className="App">

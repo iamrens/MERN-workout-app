@@ -2,6 +2,8 @@ import { useState } from "react";
 import Axios from 'axios';
 import { useForm } from "react-hook-form";
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+import { useAuthContext } from "../hooks/useAuthContext";
+
 import { Box, Typography, Stack, IconButton, CircularProgress, TextField, Alert } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -11,21 +13,27 @@ import CancelIcon from '@mui/icons-material/Cancel';
 const WorkoutDetails = ({ workout }) => {
     const [isEditing, setIsEditing] = useState(false);
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
-    const [ alertDelete, setAlertDelete ] = useState(false);
-    const [ alertEdit, setAlertEdit ] = useState(false);
+    const [ alertSuccess, setAlertSuccess ] = useState(false);
     const [ error, setError ] = useState(null);
+    const { user } = useAuthContext();
 
     const handleDelete = async (id) => {
+        if (!user) {
+            return
+        }
+
         try {
-          const response = await Axios.delete(`http://localhost:4000/api/workouts/${id}`);
+          const response = await Axios.delete(`http://localhost:4000/api/workouts/${id}`, {
+            headers: { "Authorization": `Bearer ${user.token}` }
+          });
           console.log(response.data);
-          setAlertDelete(true);
+          setAlertSuccess(true);
           setTimeout(() => {
-            setAlertDelete(false);
+            setAlertSuccess(false);
           }, 3000);
         } catch (error) {
           console.error(error);
-          setError(error);
+          setError('Error deleting workout!');
           setTimeout(() => {
             setError(false);
           }, 3000);
@@ -33,17 +41,23 @@ const WorkoutDetails = ({ workout }) => {
     };
 
     const onSubmit = async (data) => {
+        if (!user) {
+            return
+        }
+
         try {
-            const response = await Axios.patch(`http://localhost:4000/api/workouts/${workout._id}`, data);
+            const response = await Axios.patch(`http://localhost:4000/api/workouts/${workout._id}`, data, {
+                headers: { "Authorization": `Bearer ${user.token}` }
+            });
             console.log(response.data);
             setIsEditing(false);
-            setAlertEdit(true);
+            setAlertSuccess(true);
             setTimeout(() => {
-                setAlertEdit(false);
+                setAlertSuccess(false);
             }, 3000);
         } catch (error) {
             console.error(error);
-            setError(error);
+            setError('Error editing task');
             setTimeout(() => {
                 setError(false);
             }, 3000);
@@ -72,7 +86,6 @@ const WorkoutDetails = ({ workout }) => {
                             <Stack spacing={1}>
                             <TextField
                                 size="small" 
-
                                 label="Title" 
                                 type="text" 
                                 {...register("title", { required: true })} 
@@ -81,7 +94,6 @@ const WorkoutDetails = ({ workout }) => {
                             />
                             <TextField 
                                 size="small"
-                                fullWidth
                                 label="Load (kg)" 
                                 type="number" 
                                 {...register("load", { required: true })}
@@ -90,7 +102,6 @@ const WorkoutDetails = ({ workout }) => {
                             />
                             <TextField
                                 size="small"
-   
                                 label="Reps" 
                                 type="number" 
                                 {...register("reps", { required: true })} 
@@ -154,14 +165,9 @@ const WorkoutDetails = ({ workout }) => {
                     </Box>
                 </Box>
             )}
-            {alertDelete && 
-                <Alert variant="filled" severity="success" sx={{ position: 'fixed', top: 0, right: 0, m: '16px', opacity: 0.8}} onClose={() => setAlertDelete(false)} open={alertDelete}>
-                    Deleted successfully!
-                </Alert>
-            }
-            {alertEdit && 
-                <Alert variant="filled" severity="success" sx={{ position: 'fixed', top: 0, right: 0, m: '16px', opacity: 0.8}} onClose={() => setAlertEdit(false)} open={alertEdit}>
-                    Workout edited successfully!
+            {alertSuccess && 
+                <Alert variant="filled" severity="success" sx={{ position: 'fixed', top: 0, right: 0, m: '16px', opacity: 0.8}} onClose={() => setAlertSuccess(false)} open={alertSuccess}>
+                    {alertSuccess}
                 </Alert>
             }
             {error && 

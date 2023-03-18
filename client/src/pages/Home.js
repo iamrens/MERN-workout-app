@@ -2,16 +2,30 @@ import { useEffect, useState } from "react";
 import Axios from 'axios';
 import WorkoutDetails from "../components/WorkoutDetails";
 import Form from "../components/Form";
-import { Box, Typography } from '@mui/material';
+import { useAuthContext } from "../hooks/useAuthContext";
+import { Box } from '@mui/material';
 
 const Home = () => {
     const [ workouts, setWorkouts ] = useState(null);
+    const { user } = useAuthContext();
 
     useEffect(() => {
-        Axios.get("http://localhost:4000/api/workouts")
+
+        const fetchWorkouts = async () => {
+            Axios.get("http://localhost:4000/api/workouts", {
+                headers: { "Authorization": `Bearer ${user.token}` }
+            })
             .then(response => setWorkouts(response.data))
-            .catch(error => console.log(error))
-      }, [workouts])
+            .catch(error => console.log(error));
+        }
+
+        if (user) {
+            fetchWorkouts()
+        }
+
+    }, [user, workouts]);
+
+    
 
     return (
         <Box sx={{ display: {xxs: 'block', sm: 'flex'} }}>
