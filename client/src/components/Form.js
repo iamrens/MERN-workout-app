@@ -2,10 +2,10 @@ import { useForm } from "react-hook-form";
 import Axios from "axios";
 import { useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
-
 import { Box, Accordion, AccordionSummary, AccordionDetails, Typography, TextField, Button, Grid, CircularProgress, Alert } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
+const dbApi = process.env.REACT_APP_DB_API;
 
 const Form = () => {
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm();
@@ -28,7 +28,7 @@ const Form = () => {
       reps: data.reps,
     };
     try {
-      const response = await Axios.post('http://localhost:4000/api/workouts', workout, {
+      const response = await Axios.post(`${dbApi}/api/workouts`, workout, {
         headers: { "Authorization": `Bearer ${user.token}` }
       });
       console.log('new workout added:', response.data);
@@ -48,6 +48,15 @@ const Form = () => {
 
   const isFormValid = Object.keys(errors).length === 0;
 
+  const handleKeyPress = (e) => {
+    const keyCode = e.keyCode || e.which;
+    const keyValue = String.fromCharCode(keyCode);
+    const regex = /[0-9]/;
+    if (!regex.test(keyValue)) {
+      e.preventDefault();
+    }
+  };
+
   return (
     <Box sx={{m: {xxs: 'auto auto 16px 0', sm: '0 16px 0 0'}}}>
        <Accordion sx={{background: 'rgba(120, 255, 214, 0.7)'}}>
@@ -64,10 +73,10 @@ const Form = () => {
               <TextField label="Title" type="text" {...register("title", { required: true })} fullWidth error={!!errors.title}/>
             </Grid>
             <Grid item xs={12}>
-              <TextField label="Load (kg)" type="number" {...register("load", { required: true })} fullWidth error={!!errors.load}/>
+              <TextField label="Load (kg)" type="number" {...register("load", { required: true })} fullWidth error={!!errors.load} onKeyPress={handleKeyPress}/>
             </Grid>
             <Grid item xs={12}>
-              <TextField label="Reps" type="number" {...register("reps", { required: true })} fullWidth error={!!errors.reps}/>
+              <TextField label="Reps" type="number" {...register("reps", { required: true })} fullWidth error={!!errors.reps} onKeyPress={handleKeyPress}/>
               {!isFormValid && <Typography sx={{mt: 1, color: '#d50000'}}>Please fill the blanks.</Typography>}
             </Grid>
             

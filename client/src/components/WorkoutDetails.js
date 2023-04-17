@@ -3,12 +3,13 @@ import Axios from 'axios';
 import { useForm } from "react-hook-form";
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { useAuthContext } from "../hooks/useAuthContext";
-
 import { Box, Typography, Stack, IconButton, CircularProgress, TextField, Alert } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import CancelIcon from '@mui/icons-material/Cancel';
+
+const dbApi = process.env.REACT_APP_DB_API;
 
 const WorkoutDetails = ({ workout }) => {
     const [isEditing, setIsEditing] = useState(false);
@@ -24,7 +25,7 @@ const WorkoutDetails = ({ workout }) => {
         }
 
         try {
-          const response = await Axios.delete(`http://localhost:4000/api/workouts/${id}`, {
+          const response = await Axios.delete(`${dbApi}/api/workouts/${id}`, {
             headers: { "Authorization": `Bearer ${user.token}` }
           });
           console.log(response.data);
@@ -47,7 +48,7 @@ const WorkoutDetails = ({ workout }) => {
         }
 
         try {
-            const response = await Axios.patch(`http://localhost:4000/api/workouts/${workout._id}`, data, {
+            const response = await Axios.patch(`${dbApi}/api/workouts/${workout._id}`, data, {
                 headers: { "Authorization": `Bearer ${user.token}` }
             });
             console.log(response.data);
@@ -75,6 +76,15 @@ const WorkoutDetails = ({ workout }) => {
 
     const isFormValid = Object.keys(errors).length === 0;
 
+    const handleKeyPress = (e) => {
+        const keyCode = e.keyCode || e.which;
+        const keyValue = String.fromCharCode(keyCode);
+        const regex = /[0-9]/;
+        if (!regex.test(keyValue)) {
+          e.preventDefault();
+        }
+    };
+
     return (
         <Box>
             {isEditing ? (
@@ -100,6 +110,7 @@ const WorkoutDetails = ({ workout }) => {
                                 {...register("load", { required: true })}
                                 defaultValue={workout.load}
                                 error={!!errors.load}
+                                onKeyPress={handleKeyPress}
                             />
                             <TextField
                                 size="small"
@@ -108,6 +119,7 @@ const WorkoutDetails = ({ workout }) => {
                                 {...register("reps", { required: true })} 
                                 defaultValue={workout.reps}
                                 error={!!errors.reps}
+                                onKeyPress={handleKeyPress}
                             />
                             {!isFormValid && <Typography sx={{color: '#d50000'}}>Please fill the blanks.</Typography>}
                             </Stack>

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 import Axios from "axios";
 
+const dbApi = process.env.REACT_APP_DB_API;
+
 export const useLogin = () => {
     const [ error, setError ] = useState(null);
     const [ isLoading, setIsLoading ] = useState(null);
@@ -12,7 +14,7 @@ export const useLogin = () => {
         setError(null);
 
         try {
-            const response = await Axios.post('http://localhost:4000/api/user/login', {email, password});
+            const response = await Axios.post(`${dbApi}/api/user/login`, {email, password});
             const data = response.data;
 
             // save the user to local storage

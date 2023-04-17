@@ -1,11 +1,9 @@
 import { Outlet } from "react-router-dom";
-import { Box, AppBar, Toolbar, Typography, Container, Hidden, Menu, MenuItem, IconButton, Button } from '@mui/material';
+import { Box, AppBar, Toolbar, Typography, Container, Menu, MenuItem, Button } from '@mui/material';
 import Fitness from '../assets/Fitness.jpg';
-import { NavLink } from "react-router-dom";
 import { useLogout } from "../hooks/useLogout";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useState } from "react";
-import MenuIcon from '@mui/icons-material/Menu';
 
 const RootLayout = () => {
     const { logout } = useLogout();
@@ -57,7 +55,7 @@ const RootLayout = () => {
                             }}
                         >Fitness Club</Typography>
                         <Box sx={{ mt: 2.5}}>
-                            {user ? (
+                            {user &&
                                 <Box>
                                     <Button aria-label="open menu" onClick={handleMenu} sx={{color: '#fefefe',bgcolor: '#212121', px: 1.5, py: {xxs: 0.3, xs: 0.5}, borderRadius: 5, '&:hover': {bgcolor: '#1aac83'}, fontSize: {xxs: '16px',xs: '18px'}}}>
                                         Profile
@@ -70,44 +68,8 @@ const RootLayout = () => {
                                         <MenuItem onClick={handleClose}>{user.email}</MenuItem>
                                         <MenuItem onClick={handleClick}>Logout</MenuItem>
                                     </Menu>
-                                </Box>
-                            ) : (
-                                <Box sx={{display: 'flex', gap: 2}}>
-                                    <Hidden smDown>
-                                        <Box sx={{bgcolor: '#212121', px: 1.5, py: 0.5, borderRadius: 5, '&:hover': {bgcolor: '#1aac83'}}}>
-                                            <Typography variant="h6" sx={{fontSize: '18px'}}>
-                                                <NavLink to="login" style={{color: '#fefefe'}} >Login</NavLink>
-                                            </Typography>
-                                        </Box>
-                                        <Box sx={{bgcolor: '#212121', px: 1.5, py: 0.5, borderRadius: 5, '&:hover': {bgcolor: '#1aac83'}}}>
-                                            <Typography variant="h6" sx={{fontSize: '18px'}}>
-                                                <NavLink to="signup" style={{color: '#fefefe'}}>Signup</NavLink>
-                                            </Typography>
-                                        </Box> 
-                                    </Hidden>
-                                    <Hidden smUp>
-                                        <IconButton aria-label="open menu" onClick={handleMenu}>
-                                            <MenuIcon sx={{color: '#212121'}}/>
-                                        </IconButton>
-                                        <Menu
-                                            anchorEl={anchorEl}
-                                            open={open}
-                                            onClose={handleClose}
-                                            >
-                                            <MenuItem onClick={handleClose}>
-                                                <Typography variant="body1" sx={{fontSize: '16px', fontWeight: 600}}>
-                                                    <NavLink to="login" style={{color: '#212121'}}>Login</NavLink>
-                                                </Typography>
-                                            </MenuItem>
-                                            <MenuItem onClick={handleClose}>
-                                                <Typography variant="body1" sx={{fontSize: '16px', fontWeight: 600}}>
-                                                    <NavLink to="signup" style={{color: '#212121'}}>Signup</NavLink>
-                                                </Typography>
-                                            </MenuItem>
-                                        </Menu>
-                                    </Hidden>
-                                </Box>
-                            )}
+                                </Box>   
+                            }
                         </Box>
                     </Toolbar>
                 </AppBar>

@@ -5,6 +5,8 @@ import Form from "../components/Form";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { Box } from '@mui/material';
 
+const dbApi = process.env.REACT_APP_DB_API;
+
 const Home = () => {
     const [ workouts, setWorkouts ] = useState(null);
     const { user } = useAuthContext();
@@ -12,7 +14,7 @@ const Home = () => {
     useEffect(() => {
 
         const fetchWorkouts = async () => {
-            Axios.get("http://localhost:4000/api/workouts", {
+            Axios.get(`${dbApi}/api/workouts`, {
                 headers: { "Authorization": `Bearer ${user.token}` }
             })
             .then(response => setWorkouts(response.data))
