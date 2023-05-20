@@ -5,7 +5,7 @@ Web application designed to efficiently manage your fitness tasks, prioritize yo
 **Technology used:** 
 MERN stack (MongoDB, Express, React, Node) | Material UI
 
-**Developer's Note: **
+**Developer's Note:**
 It's my first MERN stack project after making the Todo List App (Firebase). This include authentication using token (jwt) so each user can have their list only to themeselves. Making this is quite fun and exciting since it's new for me. While coding this, I also learned a lot especially when it comes to backend stuff.
 
 **Link:** https://fitness-club-mern.netlify.app/login
