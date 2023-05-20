@@ -1,4 +1,5 @@
 **Full Stack Responsive Fitness List Application with Auth**
+
 Web application designed to efficiently manage your fitness tasks, prioritize your workouts and conquer your busy schedule. You can easily manage your workouts and track your progress with the added benefit of time stamps for each workout.
 
 Technology used: 
